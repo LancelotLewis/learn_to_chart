@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Echarts-demo</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <aside>
+        <h2>参数配置</h2>
+        <form name="myForm">
+          <p><input type="checkbox" name="cols" value="a" />a</p>
+          <p><input type="checkbox" name="cols" value="b" checked />b</p>
+          <p><input type="checkbox" name="cols" value="c" />c</p>
+          <p><input type="checkbox" name="cols" value="d" checked />d</p>
+          <p><input type="checkbox" name="cols" value="e" />e</p>
+
+          <button type="submit">提交</button>
+        </form>
+      </aside>
+      <section>
+        <h2>可视化结果</h2>
+        <div id="chart"></div>
+      </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts@4.9.0/dist/echarts.min.js"></script>
+    <script>
+      /**
+       * 绘图的方法
+       * @params data 传入的数据，结构为{data:[],index:[],columns:[]}
+       **/
+      function drawChart(data) {
+        const myChart = echarts.init(document.getElementById('chart'));
+        const series = [];
+        data.columns.forEach((item, index) => {
+          series.push({
+            type: 'line',
+            data: data.data.map((row) => row[index]),
+          });
+        });
+        const options = (option = {
+          xAxis: {
+            type: 'category',
+            data: data.index,
+          },
+          yAxis: {
+            type: 'value',
+          },
+          tooltip: {
+            trigger: 'axis',
+          },
+          series: series,
+        });
+
+        myChart.setOption(option);
+      }
+
+      // 拦截表单提交，使用fetch提交表单数据
+      document.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const data = new FormData(event.target);
+
+        fetch('/echarts/data', {
+          method: 'POST',
+          body: data,
+        })
+          .then(function (response) {
+            if (response.ok) {
+              return response.json();
+            }
+            return Promise.reject(response);
+          })
+          .then(function (data) {
+            console.log(data);
+            drawChart(data);
+          })
+          .catch(function (error) {
+            console.warn(error);
+          });
+      });
+    </script>
+  </body>
+</html>

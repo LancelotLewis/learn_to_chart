@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Echarts-demo</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <aside>
+        <h2>参数配置</h2>
+        <form name="myForm">
+          <p><input type="checkbox" name="cols" value="a" />a</p>
+          <p><input type="checkbox" name="cols" value="b" checked />b</p>
+          <p><input type="checkbox" name="cols" value="c" />c</p>
+          <p><input type="checkbox" name="cols" value="d" checked />d</p>
+          <p><input type="checkbox" name="cols" value="e" />e</p>
+
+          <button type="submit">提交</button>
+        </form>
+      </aside>
+      <section>
+        <h2>可视化结果</h2>
+        <iframe id="chart" src="" frameborder="0"></iframe>
+      </section>
+    </div>
+
+    <script>
+      /**
+       * 绘图的方法
+       * @params data 传入的数据，结构为{data:[],index:[],columns:[]}
+       **/
+      function drawChart(data) {
+        const chartEl = document.getElementById('chart');
+        chartEl.src = data.url + '?t=' + +new Date();
+      }
+
+      // 拦截表单提交，使用fetch提交表单数据
+      document.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const data = new FormData(event.target);
+
+        fetch('/pyecharts/data', {
+          method: 'POST',
+          body: data,
+        })
+          .then(function (response) {
+            if (response.ok) {
+              return response.json();
+            }
+            return Promise.reject(response);
+          })
+          .then(function (data) {
+            console.log(data);
+            drawChart(data);
+          })
+          .catch(function (error) {
+            console.warn(error);
+          });
+      });
+    </script>
+  </body>
+</html>
