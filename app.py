@@ -24,6 +24,7 @@ def matplotlib_html():
 def matplotlib_data():
     cols = request.form.getlist('cols')
     cols = list(cols)
+
     df = pd.read_csv('data/test.csv', index_col=0)
     df = pd.DataFrame(df, columns=cols)
 
@@ -48,7 +49,10 @@ def pyecharts_html():
 def pyecharts_data():
     cols = request.form.getlist('cols')
     cols = list(cols)
+
     df = pd.read_csv('data/test.csv', index_col=0)
+    file = request.files.get('file')
+    df = pd.read_csv(file, index_col=0)
     df = pd.DataFrame(df, columns=cols)
 
 
@@ -71,6 +75,9 @@ def echarts_html():
 def echarts_data():
     cols = request.form.getlist('cols')
     cols = list(cols)
-    df = pd.read_csv('data/test.csv', index_col=0)
+
+    # 通过form表单传递文件
+    file = request.files.get('file')
+    df = pd.read_csv(file, index_col=0)
     df = pd.DataFrame(df, columns=cols)
     return df.to_json(orient='split')
