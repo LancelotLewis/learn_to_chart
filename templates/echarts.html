@@ -50,7 +50,7 @@
             data: data.data.map((row) => row[index]),
           });
         });
-        const options = (option = {
+        const options = {
           xAxis: {
             type: 'category',
             data: data.index,
@@ -62,7 +62,7 @@
             trigger: 'axis',
           },
           series: series,
-        });
+        };
 
         myChart.setOption(option);
       }
