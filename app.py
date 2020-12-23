@@ -51,8 +51,6 @@ def pyecharts_data():
     cols = list(cols)
 
     df = pd.read_csv('data/test.csv', index_col=0)
-    file = request.files.get('file')
-    df = pd.read_csv(file, index_col=0)
     df = pd.DataFrame(df, columns=cols)
 
 
@@ -81,3 +79,8 @@ def echarts_data():
     df = pd.read_csv(file, index_col=0)
     df = pd.DataFrame(df, columns=cols)
     return df.to_json(orient='split')
+
+
+# 使用 `python app.py` 直接运行项目
+if __name__ == '__main__':
+    app.run()

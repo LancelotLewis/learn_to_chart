@@ -22,6 +22,8 @@ source .venv/Scripts/activate
 pip install -r requirements.txt
 ```
 
+> 示例使用的是 python 3.7.8 ，如果安装的是其他版本的 python，请手动安装 flask、pandas、pyecharts、matplotlib、python-dotenv 即可
+
 ### 启动项目
 
 ```
